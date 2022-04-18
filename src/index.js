@@ -1,12 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+  constructor(props) {
+    super(props);
+    // 状態の初期値をnullとして定義する
+    this.state = {value: null};
+  }
   render() {
+    // イベント作成時の括弧は{}になる
     return (
-      <button className="square">
-        {/* TODO */}
+      <button 
+        className="square"
+        // クリックされたらvalueをXに更新する。
+        onClick={() => this.setState({value: 'X'})}>
+        {this.state.value}
       </button>
     );
   }
@@ -14,7 +23,8 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <Square />;
+    // propsを渡す
+    return <Square value={i}/>;
   }
 
   render() {
