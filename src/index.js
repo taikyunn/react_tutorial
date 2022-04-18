@@ -6,7 +6,9 @@ class Square extends React.Component {
   constructor(props) {
     super(props);
     // 状態の初期値をnullとして定義する
-    this.state = {value: null};
+    this.state = {
+      value: null
+    };
   }
   render() {
     // イベント作成時の括弧は{}になる
@@ -14,7 +16,8 @@ class Square extends React.Component {
       <button 
         className="square"
         // クリックされたらvalueをXに更新する。
-        onClick={() => this.setState({value: 'X'})}>
+        onClick={() => this.props.onClick()}
+      >
         {this.state.value}
       </button>
     );
@@ -22,9 +25,25 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null)
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  }
+
   renderSquare(i) {
     // propsを渡す
-    return <Square value={i}/>;
+    return <Square
+            value={this.state.squares[i]}
+            onClick={()=> this.handleClick(i)}
+            />;
   }
 
   render() {
