@@ -2,28 +2,15 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    // 状態の初期値をnullとして定義する
-    this.state = {
-      value: null
-    };
-  }
-  render() {
-    // イベント作成時の括弧は{}になる
-    return (
-      <button 
-        className="square"
-        // クリックされたらvalueをXに更新する。
-        onClick={() => this.props.onClick()}
-      >
-        {this.state.value}
-      </button>
-    );
-  }
+// SquareはBoardに制御されたコンポーネント
+// 関数コンポーネント:renderメソッドだけを有して自分のstateを持たないコンポーネントをよりシンプルに書く方法
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
 }
-
 class Board extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +20,7 @@ class Board extends React.Component {
   }
 
   handleClick(i) {
+    // コピーそ作成することで、履歴が残るためデータの変化や、複雑な機能の実装に便利
     const squares = this.state.squares.slice();
     squares[i] = 'X';
     this.setState({squares: squares});
@@ -41,7 +29,10 @@ class Board extends React.Component {
   renderSquare(i) {
     // propsを渡す
     return <Square
+            // 現在のsquareのstateをpropsを使って渡す。
+            // this.state.squaresの値は'X''○'null'のいずれかである
             value={this.state.squares[i]}
+            // マス目がクリックされたときにどのマス目に何が入っているのかを管理する関数を呼び出す。
             onClick={()=> this.handleClick(i)}
             />;
   }
