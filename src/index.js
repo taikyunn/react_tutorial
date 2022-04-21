@@ -46,6 +46,7 @@ class Board extends React.Component {
   }
 }
 
+// 過去の着手履歴を表示する
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -62,12 +63,14 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
+    // ゲームの決着が既についている場合や、マス目が既に埋まっている場合はreturn
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
 
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
+      // concat:元の配列をミューテートしない
       history: history.concat([{
         squares: squares,
       }]),
@@ -76,11 +79,25 @@ class Game extends React.Component {
   }
 
   render() {
+    // ゲームのステータステキストの決定や表示の際に最新の履歴が使われるようにする
     const history = this.state.history;
     const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
+
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Go to move #' + move :
+        'Go to game start';
+      return (
+        <li>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
+
     let status;
 
+    // 勝者がいる場合は勝者の名前を。いない場合は次のプレイヤー名を表示する
     if (winner) {
       status = 'Winner: ' + winner;
     } else {
@@ -97,7 +114,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
